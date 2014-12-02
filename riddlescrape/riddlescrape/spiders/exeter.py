@@ -12,7 +12,9 @@ class ExeterSpider(CrawlSpider):
 
     rules = (
         # Extract links matching 'item.php' and parse them with the spider's method parse_item
-        Rule(LinkExtractor(allow=".*wiki/Anglo-Saxon_Riddles_of_the_Exeter_Book.*"), callback='save_file'),
+        Rule(LinkExtractor(allow=".*wiki/Anglo-Saxon_Riddles_of_the_Exeter_Book.*"),
+            callback='save_file',
+            follow=True),
     )
 
     def save_file(self, response):

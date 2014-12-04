@@ -1,4 +1,4 @@
 *.py[cod]
 .DS_Store
 *data*
-*.ipynb
+.ipynb_checkpoints

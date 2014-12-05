@@ -17,7 +17,8 @@ def write_tweet(tweet):
                       access_token,
                       access_token_secret)
 
-    twitter.update_status (status=tweet)
+    twitter.update_status(status=tweet)
+    return True
 
 class TweetGenerator(object):
     

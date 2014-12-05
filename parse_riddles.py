@@ -3,9 +3,11 @@ from bs4 import BeautifulSoup
 from unipath import Path
 import re
 
+nltk.data.path.append('./data/')
+
 UTF8_TAB = '\xc2\xa0'
 
-def parse_riddles_from_files_sentences():
+def parse_corpus():
 
     path = Path('./data/')
 
@@ -71,6 +73,7 @@ def _clean_sentences(sentences):
 
     multiple_spaces = re.compile(ur'(\s)+', re.UNICODE)
     space_before_punct = re.compile(ur' (\W)', re.UNICODE)
+    number_in_brackets = re.compile(ur'\[\d\]', re.UNICODE)
 
     # Encode back in utf-8, lost in tokenization
     sentences = map(lambda x : x.encode('utf-8'), sentences) 
@@ -82,13 +85,15 @@ def _clean_sentences(sentences):
     sentences = map(lambda x: x.lower().replace('\n', ' ').replace('\xc2\xa0', ' '), sentences)
     sentences = map(lambda x: re.sub(multiple_spaces, ' ', x), sentences)
     sentences = map(lambda x: re.sub(space_before_punct, r'\1', x), sentences)
+    sentences = map(lambda x: re.sub(number_in_brackets, '', x), sentences)
+    sentences = map(lambda x: x.strip(), sentences)
 
     return sentences
 
 
 
 if __name__ == "__main__":
-    sentences = parse_riddles_from_files_sentences()
+    sentences = parse_corpus()
     for i, sentence in enumerate(sentences):
         print "%s :: %s" % (i, sentence)
 

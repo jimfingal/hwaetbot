@@ -1,5 +1,6 @@
 import random
-from .markov import MarkovChain
+
+from markov import MarkovChain
 
 UTF8_TAB = '\xc2\xa0'
 
@@ -20,22 +21,34 @@ class TweetGenerator(object):
                 break
         return s
 
-    def get_tweet(self):
 
+    def generate_tweet(self):
         tweet = ''
 
         while True:
             next_sentence = self.get_unique_sentence()
-            if len(next_sentence) > 120:
+            if len(next_sentence) > 125:
                 continue
-            if len(tweet) > 0 and len(tweet) + len(next_sentence) > 120:
+            if len(tweet) > 0 and len(tweet) + len(next_sentence) > 125:
                 break
             tweet = tweet + next_sentence + ' '
 
         return tweet[:-1].strip()
-    
 
-def badassify_sentence(sentence):
+
+
+if __name__ == "__main__":
+    from parse_riddles import parse_corpus
+
+    corpus = parse_corpus()
+
+    tg = TweetGenerator(corpus, 3)
+
+    for i in range(0, 100):
+        print "%s :: %s" % (i, tg.generate_tweet())
+
+
+def fake_anglo_saxon_meter(sentence):
     new_sentence = ''
     split_sentence = sentence.split(' ')
     while len(split_sentence) > 0:

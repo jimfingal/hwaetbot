@@ -24,12 +24,17 @@ class ExeterSpider(CrawlSpider):
         p = Path("data/" + response.url.split("/")[-1] + '.html')
         p.write_file(response.body)
 
-spider = ExeterSpider()
-settings = get_project_settings()
-crawler = Crawler(settings)
-crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
-crawler.configure()
-crawler.crawl(spider)
-crawler.start()
-log.start()
-reactor.run() 
+
+def run_spider():
+	spider = ExeterSpider()
+	settings = get_project_settings()
+	crawler = Crawler(settings)
+	crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
+	crawler.configure()
+	crawler.crawl(spider)
+	crawler.start()
+	log.start()
+	reactor.run() 
+
+if __name__ == "__main__":
+	run_spider()

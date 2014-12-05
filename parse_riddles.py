@@ -3,15 +3,15 @@ from bs4 import BeautifulSoup
 from unipath import Path
 import re
 
-nltk.download('punkt', './nltk_data')
-nltk.data.path.append('./nltk_data/')
+nltk.download('punkt', './data')
+nltk.data.path.append('./data/')
 
 sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
 
 UTF8_TAB = '\xc2\xa0'
 
 
-p = Path('./riddlescrape/data/')
+p = Path('./data/')
     
 prose = []
 english_riddles = []

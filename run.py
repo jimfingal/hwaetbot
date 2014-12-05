@@ -90,6 +90,7 @@ if __name__ == "__main__":
     logging.info("With Meter :: \n%s" % with_meter)
 
     write_tweet(with_meter)
-    
+
     r.sadd(REDIS_USED, without_meter)
-    r.save() # Blocking, synchronous save. Only we use redis and we want it to be maximally persistent.
+    r.save()
+    

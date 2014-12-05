@@ -44,6 +44,8 @@ def initialize_datasources(r):
 
     # Initialize corpus in Redis
     if not len(r.smembers(REDIS_CORPUS)):
+        logging.info("No riddles in db, parsing files")
+
         _boostrap_crawled_files()
 
         from parse_riddles import parse_corpus
@@ -92,5 +94,5 @@ if __name__ == "__main__":
     write_tweet(with_meter)
 
     r.sadd(REDIS_USED, without_meter)
-    r.save()
+    r.save() # Blocking, synchronous save. Only we use redis and we want it to be maximally persistent.
     

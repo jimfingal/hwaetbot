@@ -1,9 +1,7 @@
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
 from scrapy import log, signals
-from testspiders.spiders.followall import FollowAllSpider
 from scrapy.utils.project import get_project_settings
-
 
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor

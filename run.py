@@ -1,10 +1,14 @@
 import os
 import logging
-
 import redis
+
+import nltk
+nltk.data.path.append('./data/')
 
 from unipath import Path
 from tweet_generator import TweetGenerator, fake_anglo_saxon_meter, write_tweet
+
+
 
 REDIS_CORPUS = 'corpus'
 REDIS_USED = 'used'

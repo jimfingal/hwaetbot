@@ -1,17 +1,17 @@
-from unipath import Path
-from tweet_generator import TweetGenerator, fake_anglo_saxon_meter
+import os
 import logging
 
-
 import redis
-import os
+
+from unipath import Path
+from tweet_generator import TweetGenerator, fake_anglo_saxon_meter, write_tweet
 
 REDIS_CORPUS = 'corpus'
 REDIS_USED = 'used'
 TWITTER_CHARLIMIT = 140
 
 log_fmt = "%(levelname)-6s %(processName)s %(filename)-12s:%(lineno)-4d at %(asctime)s: %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=log_fmt)
+logging.basicConfig(level=logging.INFO, format=log_fmt)
 
 
 def _boostrap_crawled_files():
@@ -58,15 +58,12 @@ def get_tweet_with_meter(r):
     without_meter = None
     with_meter = None
 
-    used = r.smembers(REDIS_USED)
-
-    logging.debug("Used already: %s" % used)
-
     while True:
         
         without_meter = tg.generate_tweet()
 
-        if without_meter in used:
+        if r.sismember(REDIS_USED, without_meter):
+            logging.debug("Already used tweet :: %s" % without_meter)
             continue
 
         with_meter = fake_anglo_saxon_meter(without_meter)
@@ -88,7 +85,6 @@ if __name__ == "__main__":
     logging.info("Generated Tweet ::\n%s " % without_meter)
     logging.info("With Meter :: \n%s" % with_meter)
 
-    r.sadd(REDIS_USED, without_meter)
-
-    # Blocking, synchronous save. Only we use redis and we want it to be maximally persistent.
-    r.save()
+    if write_tweet(with_meter):
+        r.sadd(REDIS_USED, without_meter)
+        r.save() # Blocking, synchronous save. Only we use redis and we want it to be maximally persistent.

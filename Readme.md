@@ -1,13 +1,6 @@
+hwaetbot
+========
 
+Twitter bot that generates a new riddle from the word hoard in the Anglo-Saxon poetic style every hour. 
 
-To scrape the Exeter book, you can run:
-
-	cd riddlescrape
-	scrapy crawl exeter
-
-
-Requires  buildpack:
-	
-	heroku config:add BUILDPACK_URL=git://github.com/heroku/heroku-buildpack-python.git
-
-#  Python buildpack will install libffi for you if cffi or cryptography is present in your requirements.txt.
+Drawing on the riddles found in the Exeter Book, uses a Markov model with bigrams to generate novel sentences until 140 character limit is reached. Checks ensure unique tweets and that contain no full sentences from the original text.

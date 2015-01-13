@@ -1,26 +1,23 @@
-import nltk
-from bs4 import BeautifulSoup
-from unipath import Path
 import re
 
-nltk.data.path.append('./data/')
+import nltk
+from bs4 import BeautifulSoup
 
-UTF8_TAB = '\xc2\xa0'
+import hwaetbot.config as config
+
 
 def parse_corpus():
 
-    path = Path('./data/')
+    prose, english_riddles, old_english_riddles = load_text_corpuses(config.data_path)
 
-    prose, english_riddles, old_english_riddles = _load_text_corpuses(path)
-
-    sentences = _tokenize_sentences(english_riddles)
+    sentences = tokenize_sentences(english_riddles)
     
-    cleaned_sentences = _clean_sentences(sentences)
+    cleaned_sentences = clean_sentences(sentences)
 
     return cleaned_sentences
 
 
-def _load_text_corpuses(path):
+def load_text_corpuses(path):
         
     prose = []
     english_riddles = []
@@ -47,18 +44,13 @@ def _load_text_corpuses(path):
                 old_english = [tag.text.strip().encode('utf-8') for tag in row_tds[1:]]
                 old_english_riddles = old_english_riddles + old_english
 
-    english_riddles = _fix_specific_english_riddles(english_riddles)
+    # Manual fix to a broken riddle
+    english_riddles[-1] = english_riddles[-1].replace(' (etc. as l. 2 above)', '')
 
     return prose, english_riddles, old_english_riddles
 
 
-def _fix_specific_english_riddles(english_riddles):
-
-    english_riddles[-1] = english_riddles[-1].replace(' (etc. as l. 2 above)', '') # Very specific fix
-
-    return english_riddles
-
-def _tokenize_sentences(riddles):
+def tokenize_sentences(riddles):
     sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
 
     riddle_sentences = []
@@ -69,7 +61,7 @@ def _tokenize_sentences(riddles):
 
     return riddle_sentences
 
-def _clean_sentences(sentences):
+def clean_sentences(sentences):
 
     multiple_spaces = re.compile(ur'(\s)+', re.UNICODE)
     space_before_punct = re.compile(ur' (\W)', re.UNICODE)
